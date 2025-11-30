@@ -57,37 +57,4 @@ func main() {
 
 	batchParse("my_simulated_road_to_immortality")
 
-	// config.UpdateLastChapter("new_one", "https://example.com")
-
-	// -----------------------------------
-	// defer func() {
-	// 	 if r := recover(); r != nil {
-	//         fmt.Println("Recovered in f", r)
-	//     }
-
-	// 	fmt.Println("Teest!! defer")
-	// }()
-
-	// savers.SaveNovel()
-
-	// fmt.Println("main continue")
-
-	// ---------------------------------
-
-	// url := "https://novelbin.com/b/my-simulated-road-to-immortality/chapter-201-201-187-the-sacred-one-with-a-strange-aura"
-	// content := fetch(url)
-	// parserCreator := parsers.ParserFactory(url)
-	// parser := parserCreator()
-	// parser.Init(content)
-	// parser.Parse()
-
-	// fmt.Printf("%T, %v\n", parser, parser)
-	// fmt.Println(reflect.TypeOf(parser))
-	// fmt.Println("Hello!")
-
-	// for i := range 50 {
-	// fetch(url)
-	// fmt.Printf("%v - %v\n", i, url)
-	// }
-
 }
