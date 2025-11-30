@@ -10,7 +10,7 @@ import (
 	"github.com/crispyarty/novelparser/internal"
 )
 
-const templatePath = "internal/savers/template.html"
+const templatePath = "template.html"
 
 type Content struct {
 	Novels []*internal.NovelData

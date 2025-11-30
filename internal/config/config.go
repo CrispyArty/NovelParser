@@ -20,6 +20,7 @@ type ConfigData struct {
 var appConfig ConfigData
 
 func Init() {
+
 	content, err := os.ReadFile(settingsFile)
 	if err != nil {
 		log.Fatalln(err)
@@ -48,7 +49,13 @@ func UpdateLastChapter(novelName string, url string) {
 
 	novel.LastChapterUrl = url
 
+	log.Println(novel, appConfig.Novels)
+
 	appConfig.Novels[novelName] = novel
+}
+
+func init() {
+	Init()
 }
 
 func Save() {
