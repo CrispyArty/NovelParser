@@ -14,5 +14,4 @@ import (
 type ParseHtml interface {
 	Init(*goquery.Document)
 	Parse() internal.NovelData
-	NextUrl() string
 }

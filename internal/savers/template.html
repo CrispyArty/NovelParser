@@ -33,19 +33,19 @@
       margin-bottom: 80px;
     }
   </style>
-  <title><%= title %></title>
+  <title>{{.Title}}</title>
 </head>
 <body tabindex="1" data-images="true" data-font="sans-serif" data-columns="1">
   <div id="content">
-    <% novels.each do |novel| %>
-      <h2><%= novel.title %></h2>
+    {{range .Novels}}
+      <h2>{{.Title}}</h2>
       <hr>
       <div class="chapter">
-        <% novel.paragraphs.each do |paragraph| %>
-          <p><%= paragraph %></p>
-        <% end %>
+        {{range .Paragraphs}}
+          <p>{{.}}</p>
+        {{end}}
       </div>
-    <% end %>
+    {{end}}
   </div>
 </body>
 </html>
