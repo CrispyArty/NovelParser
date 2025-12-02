@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>{{.Title}}</title>
+</head>
+<body>
+  <div id="content">
+    {{range .Novels}}
+      <mbp:pagebreak/>
+      <h2 id="ch-{{.ChapterNumber}}">{{.Title}}</h2>
+      <hr>
+      <div class="chapter">
+        {{- range .Paragraphs}}
+          <p>{{.}}</p>
+        {{end -}}
+      </div>
+    {{end}}
+  </div>
+</body>
+</html>

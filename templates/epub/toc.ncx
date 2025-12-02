@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ncx xmlns="http://www.daisy.org/z3986/2005/ncx/" version="2005-1">
+  <head>
+    <meta name="dtb:uid" content="crispyarty:novelparser:{{.Identifier}}"/>
+    <meta name="dtb:depth" content="1"/>
+    <meta name="dtb:totalPageCount" content="0"/>
+    <meta name="dtb:maxPageNumber" content="0"/>
+  </head>
+  <docTitle><text>{{.Title}}</text></docTitle>
+  <docAuthor><text>{{.Translator}}</text></docAuthor>
+  <navMap>
+    {{- range $i, $novel := .Novels}}
+      <navPoint id="navPoint-{{inc $i}}" playOrder="{{inc $i}}">
+        <navLabel><text>Chapter {{$novel.ChapterNumber}}</text></navLabel>
+        <content src="content.html#ch-{{$novel.ChapterNumber}}"/>
+      </navPoint>
+    {{end -}}
+  </navMap>
+</ncx>
