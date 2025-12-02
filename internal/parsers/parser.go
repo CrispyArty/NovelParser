@@ -6,11 +6,6 @@ import (
 	"github.com/crispyarty/novelparser/internal"
 )
 
-// type ParseHtmlData struct {
-// 	Url  string
-// 	html string
-// }
-
 type ParseHtml interface {
 	Init(*goquery.Document)
 	Parse() internal.NovelData

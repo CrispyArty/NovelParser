@@ -27,7 +27,7 @@ func validateUrl(argPos int) cobra.PositionalArgs {
 }
 
 var AddCmd = &cobra.Command{
-	Use:   "add [novel name] [first chapter url] --batch-size",
+	Use:   "add [novel_name first_chapter_url] --batch-size",
 	Short: "Add new novel to config with first chapter",
 	Args:  cobra.MatchAll(cobra.ExactArgs(2), validateUrl(2)),
 	Long:  `This command will add novel with first chapter link, and you can then use this name for "parse" command `,
@@ -44,5 +44,3 @@ func init() {
 	// AddCmd.MarkFlagRequired("name")
 	AddCmd.Flags().IntVarP(&batchSize, "batch-size", "b", 10, "Number of novels saved as one")
 }
-
-// add https://nobellink.com/noveltitle/chapter-1 --name noveltitle

@@ -10,19 +10,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// add https://nobellink.com/noveltitle/chapter-1 --name noveltitle
-
 var (
 	batchCount int
 )
 
 var ParseCmd = &cobra.Command{
-	Use:   "parse [novel name]",
+	Use:   "parse [novel_name]",
 	Short: "Parse batch-size chapters of novel by name",
 	Long:  `This command will parse new batch of a novel`,
 	Args:  cobra.ExactArgs(1),
-	// Uncomment the following line if your bare application
-	// has an action associated with it:
 	Run: func(cmd *cobra.Command, args []string) {
 		for i := range batchCount {
 			log.Printf("Downloading batch %v/%v\n", i+1, batchCount)

@@ -24,8 +24,7 @@ func (c *Content) Title() string {
 }
 
 func (c *Content) Date() string {
-	t := time.Now()
-	return t.Format("2006-01-02")
+	return time.Now().Format("2006-01-02")
 }
 
 func (c *Content) Identifier() string {

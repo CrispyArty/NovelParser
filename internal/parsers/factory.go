@@ -32,7 +32,5 @@ func ParserFactory(url string) creator {
 		log.Fatalln(err)
 	}
 
-	// fmt.Println(domain, creators[domain])
-
 	return creators[domain]
 }

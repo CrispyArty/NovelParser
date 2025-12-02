@@ -33,7 +33,6 @@ func parseTitle(doc *goquery.Document) (string, int) {
 
 	numStr, str := matches[1], matches[2]
 
-	// return reg.ReplaceAllString(title, "Chapter $1: $2")
 	title = fmt.Sprintf("Chapter %v: %v", numStr, str)
 
 	num, _ := strconv.Atoi(numStr)
@@ -70,8 +69,6 @@ func parseParagraphs(doc *goquery.Document) (paragraphs []string) {
 }
 
 func (parser *ParseHtmlNobelBin) Parse() internal.NovelData {
-	// fmt.Println("NobelBin Parse() implementation")
-
 	title, number := parseTitle(parser.doc)
 
 	return internal.NovelData{
