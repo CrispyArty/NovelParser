@@ -19,6 +19,17 @@ var ParseCmd = &cobra.Command{
 	Short: "Parse batch-size chapters of novel by name",
 	Long:  `This command will parse new batch of a novel`,
 	Args:  cobra.ExactArgs(1),
+	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		novels := config.Config().Novels
+		names := make([]string, 0, len(novels))
+
+		for name := range novels {
+			names = append(names, name)
+			// names = append(names, fmt.Sprintf("%v\t%v\n", name, novel.LastChapterUrl))
+		}
+
+		return names, cobra.ShellCompDirectiveNoFileComp
+	},
 	Run: func(cmd *cobra.Command, args []string) {
 		for i := range batchCount {
 			log.Printf("Downloading batch %v/%v\n", i+1, batchCount)
@@ -29,7 +40,7 @@ var ParseCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(ParseCmd)
-	ParseCmd.Flags().IntVarP(&batchCount, "count", "c", 1, "Number of batches of chapters to parse")
+	// ParseCmd.Flags().IntVarP(&batchCount, "count", "c", 1, "Number of batches of chapters to parse")
 }
 
 func batchParse(novelName string) {
