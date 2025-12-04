@@ -3,16 +3,18 @@ package savers
 import (
 	"archive/zip"
 	"bytes"
-	"fmt"
 	"html/template"
 	"log"
 	"os"
+	"path/filepath"
 	textTemplate "text/template"
 
 	"github.com/crispyarty/novelparser/internal"
+	"github.com/crispyarty/novelparser/internal/config"
 )
 
 const templateDirPath = "templates/epub"
+const uploadsDirPath = "uploads"
 
 var funcMap = template.FuncMap{
 	"inc": func(i int) int { return i + 1 },
@@ -43,14 +45,17 @@ func SaveNovel(name string, novels []*internal.NovelData) string {
 }
 
 func templatePath(finename string) string {
-	return fmt.Sprintf("%v/%v", templateDirPath, finename)
+	// return fmt.Sprintf("%v/%v", config.AssetPath(templateDirPath), finename)
+	return config.AssetPath(templateDirPath, finename)
 }
 
 func archiveName(data *Content) string {
-	dir := fmt.Sprintf("uploads/%v", data.NovelName)
+	// dir := fmt.Sprintf("uploads/%v", data.NovelName)
+	dir := config.AssetPath(uploadsDirPath, data.NovelName)
 	os.MkdirAll(dir, os.ModePerm)
 
-	return fmt.Sprintf("%v/%v.epub", dir, data.Title())
+	// return fmt.Sprintf("%v/%v.epub", dir, data.Title())
+	return filepath.Join(dir, data.Title())
 }
 
 func genFromHtmlTemplate(filename string, data *Content) []byte {

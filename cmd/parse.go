@@ -23,6 +23,11 @@ var ParseCmd = &cobra.Command{
 		novels := config.Config().Novels
 		names := make([]string, 0, len(novels))
 
+		if len(args) >= 1 {
+			// Stop further completion (including file completion)
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+
 		for name := range novels {
 			names = append(names, name)
 			// names = append(names, fmt.Sprintf("%v\t%v\n", name, novel.LastChapterUrl))
@@ -40,7 +45,7 @@ var ParseCmd = &cobra.Command{
 
 func init() {
 	RootCmd.AddCommand(ParseCmd)
-	// ParseCmd.Flags().IntVarP(&batchCount, "count", "c", 1, "Number of batches of chapters to parse")
+	ParseCmd.Flags().IntVarP(&batchCount, "count", "c", 1, "Number of batches of chapters to parse")
 }
 
 func batchParse(novelName string) {

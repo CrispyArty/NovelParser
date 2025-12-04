@@ -2,11 +2,14 @@ package config
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 )
 
-const settingsFile = "settings.json"
+const (
+	settingsFile = "settings.json"
+)
 
 type ConfigNovel struct {
 	LastChapterUrl string `json:"last_chapter_url"`
@@ -19,18 +22,18 @@ type ConfigData struct {
 
 var appConfig ConfigData
 
-func Init() {
+func init() {
+	Init()
+}
 
-	content, err := os.ReadFile(settingsFile)
+func Init() {
+	content, err := os.ReadFile(AssetPath(settingsFile))
+
 	if err != nil {
 		log.Fatalln(err)
 	}
 
 	json.Unmarshal(content, &appConfig)
-}
-
-func createNovel() ConfigNovel {
-	return ConfigNovel{BatchSize: 10}
 }
 
 func Novel(name string) ConfigNovel {
@@ -49,13 +52,9 @@ func UpdateLastChapter(novelName string, url string) {
 
 	novel.LastChapterUrl = url
 
-	log.Println(novel, appConfig.Novels)
+	// log.Println(novel, appConfig.Novels)
 
 	appConfig.Novels[novelName] = novel
-}
-
-func init() {
-	Init()
 }
 
 func Save() {
@@ -67,5 +66,16 @@ func Save() {
 
 	jsonData, err := json.MarshalIndent(appConfig, "", "  ")
 	check(err)
-	check(os.WriteFile(settingsFile, jsonData, 0644))
+
+	fmt.Println()
+
+	check(os.WriteFile(AssetPath(settingsFile), jsonData, 0644))
+}
+
+// func AssetPath(file string) string {
+// 	return filepath.Join(WorkingDir, file)
+// }
+
+func createNovel() ConfigNovel {
+	return ConfigNovel{BatchSize: 10}
 }
