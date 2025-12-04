@@ -55,7 +55,7 @@ func archiveName(data *Content) string {
 	os.MkdirAll(dir, os.ModePerm)
 
 	// return fmt.Sprintf("%v/%v.epub", dir, data.Title())
-	return filepath.Join(dir, data.Title())
+	return filepath.Join(dir, data.Title()+".epub")
 }
 
 func genFromHtmlTemplate(filename string, data *Content) []byte {
