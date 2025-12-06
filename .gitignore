@@ -1,3 +1,5 @@
 .vscode/
 uploads/
 settings.json
+client_secret.json
+token.json
