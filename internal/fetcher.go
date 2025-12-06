@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"errors"
 	"log"
 	"net/http"
 	"time"
@@ -20,16 +21,21 @@ func buildRequest(url string) *http.Request {
 }
 
 func fetchWithAttempts(url string) (resp *http.Response, err error) {
-	delay := 5 * time.Second
+	delay := 7 * time.Second
 	attemts := 5
 	req := buildRequest(url)
 
-	for i := range attemts {
+	for i := range attemts + 1 {
 		log.Println("Fetcing content from:", url)
 		client := &http.Client{}
 		resp, err = client.Do(req)
 
 		if err == nil && resp.StatusCode == 200 {
+			return
+		}
+
+		if i == attemts {
+			err = errors.New("too many attempts")
 			return
 		}
 
@@ -39,9 +45,7 @@ func fetchWithAttempts(url string) (resp *http.Response, err error) {
 			log.Printf("Request failed with wrong status code (attempt %d/%d): %v. Retrying in %v...\n", i+1, attemts, resp.Status, delay)
 		}
 
-		if i+1 != attemts {
-			time.Sleep(delay)
-		}
+		time.Sleep(delay)
 	}
 
 	return
@@ -50,7 +54,7 @@ func fetchWithAttempts(url string) (resp *http.Response, err error) {
 func Fetch(url string) *goquery.Document {
 	resp, err := fetchWithAttempts(url)
 	if err != nil {
-		log.Panicf("Error fetcing url %v\nurl:%v\n", err, url)
+		log.Panicf("Error fetcing url %v\n", err)
 	}
 
 	defer resp.Body.Close()
