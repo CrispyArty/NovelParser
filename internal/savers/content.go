@@ -2,6 +2,7 @@ package savers
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/crispyarty/novelparser/internal"
@@ -37,6 +38,12 @@ func (c *Content) Identifier() string {
 	}
 
 	return fmt.Sprintf("chapter-%v-%v", c.Novels[0].ChapterNumber, c.Novels[len(c.Novels)-1].ChapterNumber)
+}
+
+func (c *Content) Author() string {
+	human := strings.ReplaceAll(c.NovelName, "_", " ")
+
+	return strings.ToUpper(string(human[0])) + strings.ToLower(human[1:])
 }
 
 func newContent(name string, novels []*internal.NovelData) *Content {

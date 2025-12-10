@@ -1,10 +1,13 @@
 package cmd
 
 import (
+	"fmt"
 	"log"
+	"path/filepath"
 
 	"github.com/crispyarty/novelparser/internal"
 	"github.com/crispyarty/novelparser/internal/config"
+	"github.com/crispyarty/novelparser/internal/mailer"
 	"github.com/crispyarty/novelparser/internal/parsers"
 	"github.com/crispyarty/novelparser/internal/savers"
 	"github.com/spf13/cobra"
@@ -12,6 +15,7 @@ import (
 
 var (
 	batchCount int
+	sendEmails bool
 )
 
 var ParseCmd = &cobra.Command{
@@ -36,19 +40,45 @@ var ParseCmd = &cobra.Command{
 		return names, cobra.ShellCompDirectiveNoFileComp
 	},
 	Run: func(cmd *cobra.Command, args []string) {
+		ch := make(chan string)
+
+		if sendEmails {
+			mailer.Validate()
+		}
+
 		for i := range batchCount {
 			log.Printf("Downloading batch %v/%v\n", i+1, batchCount)
-			batchParse(args[0])
+			filename := batchParse(args[0])
+
+			if sendEmails {
+				go func() {
+					defer func() {
+						if r := recover(); r != nil {
+							ch <- `Error sending email: "` + filepath.Base(filename) + `"`
+						}
+					}()
+					mailer.SendBook(filename)
+					ch <- `Book sent via email: "` + filepath.Base(filename) + `"`
+				}()
+			}
 		}
+
+		if sendEmails {
+			for range batchCount {
+				fmt.Println(<-ch)
+			}
+		}
+
 	},
 }
 
 func init() {
 	RootCmd.AddCommand(ParseCmd)
 	ParseCmd.Flags().IntVarP(&batchCount, "count", "c", 1, "Number of batches of chapters to parse")
+	ParseCmd.Flags().BoolVarP(&sendEmails, "email", "e", false, "Send books to email")
 }
 
-func batchParse(novelName string) {
+func batchParse(novelName string) string {
 	novelConf := config.Novel(novelName)
 	parserCreator := parsers.ParserFactory(novelConf.LastChapterUrl)
 
@@ -71,4 +101,6 @@ func batchParse(novelName string) {
 	log.Println("Saved!", filename)
 
 	config.UpdateLastChapter(novelName, nextUrl)
+
+	return filename
 }

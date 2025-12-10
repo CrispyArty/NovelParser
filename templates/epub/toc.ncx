@@ -7,11 +7,11 @@
     <meta name="dtb:maxPageNumber" content="0"/>
   </head>
   <docTitle><text>{{.Title}}</text></docTitle>
-  <docAuthor><text>{{.Translator}}</text></docAuthor>
+  <docAuthor><text>{{.Author}}</text></docAuthor>
   <navMap>
     {{- range $i, $novel := .Novels}}
       <navPoint id="navPoint-{{inc $i}}" playOrder="{{inc $i}}">
-        <navLabel><text>Chapter {{$novel.ChapterNumber}}</text></navLabel>
+        <navLabel><text>{{$novel.Title}}</text></navLabel>
         <content src="content.html#ch-{{$novel.ChapterNumber}}"/>
       </navPoint>
     {{end -}}
