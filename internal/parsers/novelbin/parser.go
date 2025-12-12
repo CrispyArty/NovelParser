@@ -3,7 +3,6 @@ package novelbin
 import (
 	"fmt"
 	"regexp"
-	"slices"
 	"strconv"
 	"strings"
 
@@ -48,14 +47,10 @@ func parseNextUrl(doc *goquery.Document) string {
 }
 
 func parseParagraphs(doc *goquery.Document) (paragraphs []string) {
-	// validTags := []string{"p", "h1", "h2", "h3", "h4", "h5", "h6"}
-	validTags := []string{"p"}
+	validTags := []string{"p", "h1", "h2", "h3", "h4", "h5", "h6"}
+	// validTags := []string{"p"}
 
-	doc.Find("#chr-content").Children().Each(func(i int, s *goquery.Selection) {
-		if !slices.Contains(validTags, goquery.NodeName(s)) {
-			return
-		}
-
+	doc.Find("#chr-content").Find(strings.Join(validTags, ", ")).Each(func(i int, s *goquery.Selection) {
 		text := strings.TrimSpace(s.Text())
 
 		if text == "" {

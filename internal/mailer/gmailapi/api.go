@@ -54,16 +54,6 @@ func ValidateToken() error {
 
 	if err != nil {
 		return err
-		// 	log.Printf("Error refreshing token: %v", err)
-		// 	// The refresh token is likely invalid or revoked
-		// 	fmt.Println("Refresh token is NOT valid.")
-		// } else {
-		// 	fmt.Printf("%T\n", newToken)
-		// 	fmt.Println("new token: ", newToken)
-		// 	fmt.Println("AccessToken: ", newToken.AccessToken)
-		// 	fmt.Println("RefreshToken: ", newToken.RefreshToken)
-		// 	fmt.Println("Expiry: ", newToken.Expiry)
-		// 	fmt.Println("ExpiresIn: ", newToken.ExpiresIn)
 	}
 
 	saveToken(newToken)
@@ -80,34 +70,26 @@ func CreateNewToken() {
 func SendBook(message *common.Message) {
 	srv := gmailService()
 
-	// fmt.Println(message.Raw())
 	msg := &gmail.Message{
 		Raw: string(message.Raw()),
 	}
 
 	user := "me"
 
-	s := srv.Users.Messages.Send(user, msg)
-	// fmt.Println("Send request!", s)
-
-	_, err := s.Do()
+	msg, err := srv.Users.Messages.Send(user, msg).Do()
 
 	if err != nil {
 		log.Panicf("Send book via email error: %v", err)
-
 		// var apiErr *oauth2.RetrieveError
-
 		// if ok := errors.As(err, &apiErr); ok {
-		// 	log.Println("ErrorCode:", apiErr.ErrorCode)
-
-		// 	log.Println("Header:", apiErr.Response.Header)
-		// 	log.Println("Body:", string(apiErr.Body))
-		// 	log.Panicf("Google Api error: %v", apiErr)
-		// } else {
-		// 	log.Panicf("Send book via email error: %v", err)
 		// }
 	}
 
+	_, err = srv.Users.Messages.Trash(user, msg.Id).Do()
+
+	if err != nil {
+		log.Panicf("Move to trash error: %v", err)
+	}
 	// fmt.Println("Success!")
 }
 
@@ -163,7 +145,7 @@ func oauth2Config() *oauth2.Config {
 	}
 
 	// gmail.GmailReadonlyScope
-	config, err := google.ConfigFromJSON(b, gmail.GmailSendScope)
+	config, err := google.ConfigFromJSON(b, gmail.GmailSendScope, gmail.GmailModifyScope)
 	if err != nil {
 		log.Panicf("Unable to parse client secret file to config: %v", err)
 	}
@@ -175,8 +157,6 @@ func gmailService() *gmail.Service {
 	ctx := context.Background()
 
 	config := oauth2Config()
-
-	// fmt.Println(getToken())
 
 	client := config.Client(context.Background(), getToken())
 
