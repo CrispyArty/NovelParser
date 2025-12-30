@@ -11,15 +11,6 @@ import (
 	"github.com/crispyarty/novelparser/internal/mailer/common"
 )
 
-// func getCreds() {
-// 	dbPassword := os.Getenv("DB_PASSWORD")
-// 	if dbPassword == "" {
-// 		fmt.Println("DB_PASSWORD environment variable not set.")
-// 	} else {
-// 		fmt.Printf("Database Password: %s\n", dbPassword)
-// 	}
-// }
-
 type loginAuth struct {
 	username, password string
 }

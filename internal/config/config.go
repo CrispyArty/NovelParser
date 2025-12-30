@@ -2,7 +2,6 @@ package config
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"os"
 )
@@ -17,6 +16,10 @@ type ConfigNovel struct {
 }
 
 type ConfigData struct {
+	HttpHeaders struct {
+		UserAgent string            `json:"User-Agent"`
+		Cookies   map[string]string `json:"cookies"`
+	} `json:"http_headers"`
 	Novels map[string]ConfigNovel `json:"novels"`
 }
 
@@ -66,8 +69,6 @@ func Save() {
 
 	jsonData, err := json.MarshalIndent(appConfig, "", "  ")
 	check(err)
-
-	fmt.Println()
 
 	check(os.WriteFile(AssetPath(settingsFile), jsonData, 0644))
 }

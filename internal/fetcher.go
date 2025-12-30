@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/crispyarty/novelparser/internal/config"
 )
 
 func buildRequest(url string) *http.Request {
@@ -15,17 +16,23 @@ func buildRequest(url string) *http.Request {
 		log.Panicf("Error creating get request: %v", err)
 	}
 
-	req.Header.Set("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36")
+	httpHeaders := config.Config().HttpHeaders
+
+	req.Header.Set("User-Agent", httpHeaders.UserAgent)
+
+	for name, value := range httpHeaders.Cookies {
+		cookie := &http.Cookie{Name: name, Value: value}
+		req.AddCookie(cookie)
+	}
 
 	return req
 }
 
-func fetchWithAttempts(url string) (resp *http.Response, err error) {
+func fetchWithAttempts(url string, attemts int) (resp *http.Response, err error) {
 	delay := 7 * time.Second
-	attemts := 5
 	req := buildRequest(url)
 
-	for i := range attemts + 1 {
+	for i := range attemts {
 		log.Println("Fetcing content from:", url)
 		client := &http.Client{}
 		resp, err = client.Do(req)
@@ -34,17 +41,18 @@ func fetchWithAttempts(url string) (resp *http.Response, err error) {
 			return
 		}
 
-		if i == attemts {
+		if err != nil {
+			log.Printf("Request failed with error (attempt %d/%d): %v", i+1, attemts, err)
+		} else {
+			log.Printf("Request failed with wrong status code (attempt %d/%d): %v", i+1, attemts, resp.Status)
+		}
+
+		if i+1 == attemts {
 			err = errors.New("too many attempts")
 			return
 		}
 
-		if err != nil {
-			log.Printf("Request failed with error (attempt %d/%d): %v. Retrying in %v...\n", i+1, attemts, err, delay)
-		} else {
-			log.Printf("Request failed with wrong status code (attempt %d/%d): %v. Retrying in %v...\n", i+1, attemts, resp.Status, delay)
-		}
-
+		log.Printf("Retrying in %v...\n", delay)
 		time.Sleep(delay)
 	}
 
@@ -52,7 +60,7 @@ func fetchWithAttempts(url string) (resp *http.Response, err error) {
 }
 
 func Fetch(url string) *goquery.Document {
-	resp, err := fetchWithAttempts(url)
+	resp, err := fetchWithAttempts(url, 1)
 	if err != nil {
 		log.Panicf("Error fetcing url %v\n", err)
 	}

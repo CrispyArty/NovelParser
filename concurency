@@ -1,92 +1,51 @@
-// package main
+package main
 
-// import (
-// 	"fmt"
-// 	"os"
-// 	"time"
-// )
+import (
+	"fmt"
+	"math/rand"
+	"time"
+)
 
-// // import "github.com/crispyarty/novelparser/internal/mailer"
+// "github.com/crispyarty/novelparser/cmd"
+// "github.com/crispyarty/novelparser/internal/config"
 
-// // "github.com/crispyarty/novelparser/cmd"
-// // "github.com/crispyarty/novelparser/internal/config"
+// import "github.com/crispyarty/novelparser/internal/mailer"
 
-// func conc1() {
-// 	fmt.Println("conc1---begin")
-// 	time.Sleep(5 * time.Second)
-// 	panic("gosu")
-// 	fmt.Println("conc1---end")
-// }
+func inc(ch chan int) {
+	i := rand.Intn(100)
 
-// func conc2() {
+	fmt.Println("i=", i)
 
-// 	fmt.Println("conc2---begin")
-// 	time.Sleep(5 * time.Second)
-// 	fmt.Println("conc2---end")
+	ch <- i
+}
 
-// 	f, err := os.OpenFile("test2.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0600)
-// 	if err != nil {
-// 		fmt.Println(err)
+func main() {
 
-// 		return
-// 	}
+	ch := make(chan int)
 
-// 	defer f.Close()
+	// close(ch)
+	// go inc(ch)
+	// go inc(ch)
+	// go inc(ch)
+	// go inc(ch)
+	// go inc(ch)
 
-// 	f.Write([]byte("asd"))
+	// close(ch)
 
-// 	return
-// }
+	time.Sleep(2 * time.Second)
 
-// func conc3(c chan int) {
-// 	// x := <-c // receive from c
-// 	// fmt.Println("x:=", x)
+	fmt.Println(len(ch), cap(ch))
 
-// 	fmt.Println("1 seconds")
-// 	c <- 1
+	// fmt.Println(i)
 
-// 	fmt.Println("2 seconds")
-// 	time.Sleep(2 * time.Second)
+	for range 5 {
+		fmt.Println(<-ch)
+	}
 
-// 	fmt.Println("6 seconds")
-// 	c <- 2
-// }
+	// bookPath := "uploads/my_simulated_road_to_immortality/test.epub"
+	// mailer.SendBook(bookPath)
 
-// type gos struct {
-// 	Name string
-// }
+	// defer config.Save()
 
-// func main() {
-
-// 	// var g []int
-// 	// fmt.Println(g, make([]int))
-
-// 	// var ch chan int
-// 	ch := make(chan int)
-// 	fmt.Printf("ch: %v\n", ch)
-// 	// ch <- 1
-// 	// ch <- 2
-// 	go conc3(ch)
-
-// 	// x := <-ch // receive from c
-// 	time.Sleep(4 * time.Second)
-// 	fmt.Println("4 seconds")
-// 	// fmt.Println("x:=", x)
-// 	// y := <-ch
-// 	// fmt.Println(x, y, x+y)
-
-// 	// go conc1()
-// 	// go conc2()
-// 	// fmt.Println("main")
-// 	// time.Sleep(7 * time.Second)
-// 	// defer func() {
-// 	// 	fmt.Println("defer")
-// 	// }()
-
-// 	// bookPath := "uploads/my_simulated_road_to_immortality/test.epub"
-// 	// mailer.SendSmtp(bookPath)
-
-// 	// defer config.Save()
-
-// 	// cmd.Execute()
-// }
+	// cmd.Execute()
+}

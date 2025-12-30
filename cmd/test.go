@@ -14,7 +14,7 @@ var TestCmd = &cobra.Command{
 	Short: "Test and debug",
 	Long:  `This command will parse new batch of a novel`,
 	Run: func(cmd *cobra.Command, args []string) {
-		testEmail()
+		testParse()
 	},
 }
 
@@ -29,7 +29,7 @@ func testEmail() {
 }
 
 func testParse() {
-	url := "https://novelbin.com/b/my-simulated-road-to-immortality/chapter-733-698-sketching-the-mountains-and-rivers"
+	url := "https://novelbin.com/b/my-simulated-road-to-immortality/chapter-1601-1357-the-immortal-worlds-dao-of-flames-tribulation-7k2"
 	parserCreator := parsers.ParserFactory(url)
 	doc := internal.Fetch(url)
 	parser := parserCreator()
