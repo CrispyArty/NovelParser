@@ -60,7 +60,7 @@ func fetchWithAttempts(url string, attemts int) (resp *http.Response, err error)
 }
 
 func Fetch(url string) *goquery.Document {
-	resp, err := fetchWithAttempts(url, 1)
+	resp, err := fetchWithAttempts(url, 7)
 	if err != nil {
 		log.Panicf("Error fetcing url %v\n", err)
 	}
